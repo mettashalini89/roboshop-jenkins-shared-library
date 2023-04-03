@@ -1,6 +1,6 @@
 def call() {
     pipeline {
-        agent any{
+        agent any
             stages{
                 stage('Init'){
                     steps{
@@ -16,4 +16,3 @@ def call() {
             }
         }
     }
-}
