@@ -5,10 +5,10 @@ def call() {
             stage('Compile/Build') {
                 steps {
                     script {
-                        if (env_lang == "nodejs"){
+                        if (env_lang == "nodejs") {
                             sh "npm install"
                         }
-                        if (env_lang == "maven"){
+                        if (env_lang == "maven") {
                             sh "mvn package"
                         }
                     }
