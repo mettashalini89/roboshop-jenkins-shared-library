@@ -17,6 +17,14 @@ def call() {
                     }
                 }
             }
+
+            stage('Quality Check') {
+                steps {
+                    script {
+                        common.qualitycheck()
+                    }
+                }
+            }
         }
     }
 }
