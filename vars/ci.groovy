@@ -7,7 +7,7 @@ def call() {
         stages {
             stage('Compile/Build') {
                 steps {
-                    mail bcc: '', body: 'test', cc: '', from: 'mettashalini89@gmail.com', replyTo: '', subject: 'test', to: 'mettashalini89@gmail.com'
+                    sh 'env'
                     script {
                        common.compile()
                     }
@@ -28,6 +28,11 @@ def call() {
                         common.qualitycheck()
                     }
                 }
+            }
+        }
+        post {
+            failure {
+                mail  body: '${component}-Pipeline Failure \n ${BUILD_URL}', from: 'mettashalini89@gmail.com', subject: '${component}-Pipeline Failure', to: 'mettashalini89@gmail.com'
             }
         }
     }
