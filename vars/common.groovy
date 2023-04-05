@@ -17,5 +17,6 @@ def testcases() {
 }
 
 def qualitycheck() {
-    sh 'sonar-scanner -Dsonar.host.url=http://172.31.0.236:9000 -Dsonar.login=admin -Dsonar.password=admin123 -Dsonar.projectKey=${component}'
+    sh 'sonar-scanner -Dsonar.host.url=http://172.31.0.236:9000 -Dsonar.login=admin -Dsonar.password=admin123 -Dsonar.projectKey=${component} ${sonar_extra_opts}'
 }
+
