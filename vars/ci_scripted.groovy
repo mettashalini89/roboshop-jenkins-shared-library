@@ -2,6 +2,10 @@ def call() {
     if (!env.sonar_extra_opts){
         env.sonar_extra_opts=""
     }
+
+    if (env.TAG_NAME !=~ ".*"){
+        env.GTAG = "true"
+    }
     node('workstation') {
 
         try {
@@ -13,15 +17,19 @@ def call() {
                 sh 'ls -l'
             }
 
+            sh 'env'
+
             if (env.BRANCH_NAME!= "main"){
                 stage('Compile/Build') {
-                    sh 'env'
                     common.compile()
                 }
             }
 
-            stage('Test Cases') {
-                common.testcases()
+            if (env.GTAG != "true"){
+                stage('Test Cases') {
+                    common.testcases()
+                }
+
             }
 
             stage('Quality Check') {
