@@ -40,6 +40,15 @@ def call() {
                 }
             }
 
+            if (env.GTAG == "true") {
+                stage('Package') {
+                    common.testcases()
+                }
+                stage('Artifact') {
+                    common.testcases()
+                }
+            }
+
 
         } catch (e) {
             mail  body: "<h1>${component}-Pipeline Failure \n ${BUILD_URL}</h1>", from: "mettashalini89@gmail.com", subject: "${component}-Pipeline Failure", to: "mettashalini89@gmail.com",  mimeType: "text/html"
