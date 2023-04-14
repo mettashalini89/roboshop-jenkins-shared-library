@@ -34,9 +34,13 @@ def call() {
 
             }
 
-            stage('Quality Check') {
-                common.qualitycheck()
+            if (BRANCH_NAME ==~ "PR-.*") {
+                stage('Quality Check') {
+                    common.qualitycheck()
+                }
             }
+
+
         } catch (e) {
             mail  body: "<h1>${component}-Pipeline Failure \n ${BUILD_URL}</h1>", from: "mettashalini89@gmail.com", subject: "${component}-Pipeline Failure", to: "mettashalini89@gmail.com",  mimeType: "text/html"
         }
