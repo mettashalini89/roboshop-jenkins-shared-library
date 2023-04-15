@@ -2,37 +2,57 @@ def call() {
     if (!env.sonar_extra_opts){
         env.sonar_extra_opts=""
     }
-    pipeline {
-        agent any
-        stages {
-            stage('Compile/Build') {
-                steps {
-                    script {
-                       common.compile()
-                    }
+
+    if (env.TAG_NAME ==~ ".*"){
+        env.GTAG = "true"
+    }else {
+        env.GTAG = "false"
+    }
+    node('workstation') {
+
+        try {
+            stage('Check out Code') {
+                sh 'ls -l'
+                cleanWs()
+                sh 'ls -l'
+                git branch: 'main', url: 'https://github.com/mettashalini89/cart'
+                sh 'ls -l'
+            }
+
+            sh 'env'
+
+            if (env.BRANCH_NAME != "main"){
+                stage('Compile/Build') {
+                    common.compile()
                 }
             }
 
-            stage('Test Cases') {
-                steps {
-                    script {
-                        common.testcases()
-                    }
+            if (env.GTAG != "true" && env.BRANCH_NAME != "main"){
+                stage('Test Cases') {
+                    common.testcases()
+                }
+
+            }
+
+            if (BRANCH_NAME ==~ "PR-.*") {
+                stage('Quality Check') {
+                    common.qualitycheck()
                 }
             }
 
-            stage('Quality Check') {
-                steps {
-                    script {
-                        common.qualitycheck()
-                    }
+            if (env.GTAG == "true") {
+                stage('Package') {
+                    common.prepareArtifacts()
+                }
+                stage('Artifact') {
+                    common.testcases()
                 }
             }
-        }
-        post {
-            failure {
-                mail  body: "<h1>${component}-Pipeline Failure \n ${BUILD_URL}</h1>", from: "mettashalini89@gmail.com", subject: "${component}-Pipeline Failure", to: "mettashalini89@gmail.com",  mimeType: "text/html"
-            }
+
+
+        } catch (e) {
+            mail  body: "<h1>${component}-Pipeline Failure \n ${BUILD_URL}</h1>", from: "mettashalini89@gmail.com", subject: "${component}-Pipeline Failure", to: "mettashalini89@gmail.com",  mimeType: "text/html"
         }
     }
 }
+
