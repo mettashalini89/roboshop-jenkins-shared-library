@@ -12,11 +12,9 @@ def call() {
 
         try {
             stage('Check out Code') {
-                sh 'ls -l'
                 cleanWs()
-                sh 'ls -l'
-                git branch: 'main', url: 'https://github.com/mettashalini89/cart'
-                sh 'ls -l'
+                git branch: 'main', url: 'https://github.com/mettashalini89/${component}'
+
             }
 
             sh 'env'
@@ -45,7 +43,7 @@ def call() {
                     common.prepareArtifacts()
                 }
                 stage('Artifact') {
-                    common.testcases()
+                    common.artifactUpload()
                 }
             }
 
