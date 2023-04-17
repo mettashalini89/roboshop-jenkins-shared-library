@@ -13,7 +13,7 @@ def call() {
         try {
             stage('Check out Code') {
                 cleanWs()
-                git branch: 'main', url: 'https://github.com/mettashalini89/${component}'
+                git branch: 'main', url: "https://github.com/mettashalini89/${component}"
 
             }
 
