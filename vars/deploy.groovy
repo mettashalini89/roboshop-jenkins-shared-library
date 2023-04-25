@@ -9,13 +9,13 @@ def call() {
         }
 
         stages {
-            stage('Update parameter store'){
+            stage('Update parameter store') {
                 steps {
                     sh 'aws ssm put-parameter --name ${environment}.${component}.app_version --type "String" --value "${app_version}" --overwrite'
 
                 }
             }
-            stage("Deploy Servers"){
+            stage("Deploy Servers") {
                 steps {
                     sh 'aws ec2 describe-instances --filters "Name=tag:Owner,Values=${component}-${environment}" --query "Reservations[*].Instances[*].PrivateIpAddresses" --output text >/tmp/servers'
                     sh 'ansible-playbook -i /tmp/servers roboshop.yml -e role_name=${component} -e env=${environment}'
