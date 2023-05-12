@@ -24,12 +24,14 @@ def qualitycheck() {
 }
 
 def prepareArtifacts() {
-    sh 'echo ${TAG_NAME} >VERSION'
-    if (app_lang == "maven"){
-        sh 'zip -r ${component}-${TAG_NAME}.zip ${component}.jar schema VERSION'
-    }else {
-        sh 'zip -r ${component}-${TAG_NAME}.zip * -x Jenkinsfile'
-    }
+    //sh 'echo ${TAG_NAME} >VERSION'
+    //if (app_lang == "maven"){
+    //    sh 'zip -r ${component}-${TAG_NAME}.zip ${component}.jar schema VERSION'
+    //}else {
+    //    sh 'zip -r ${component}-${TAG_NAME}.zip * -x Jenkinsfile'
+    //}
+
+    docker build -t 780395309002.dkr.ecr.us-east-1.amazonaws.com/${component}:${TAG_NAME} .
 
 }
 
