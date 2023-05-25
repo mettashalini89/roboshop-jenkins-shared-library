@@ -1,0 +1,38 @@
+def call() {
+    pipeline {
+        agent any
+
+        options {
+            ansiColor('xterm')
+        }
+
+        parameters {
+            string(name: 'app_version', defaultValue: '', description: 'App version')
+            string(name: 'component', defaultValue: '', description: 'Component')
+            string(name: 'environment', defaultValue: '', description: 'Environment')
+        }
+
+        stages {
+            stage('Clone Application') {
+                steps {
+                    dir('App'){
+                        git branch: 'main', url: "https://github.com/mettashalini89/${component}"
+                    }
+                }
+            }
+            stage("Deploy Helm Chart") {
+                steps {
+                    script {
+                        sh 'helm install ${component} /App/helm/${environment}.yaml'
+                        }
+                    }
+
+                }
+            }
+        }
+        post {
+            always {
+                cleanWs()
+            }
+        }
+}
